@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Globe, Paperclip, Plus, Send } from "lucide-react";
 import { cn } from "../../lib/utils";
-import { Textarea } from "./textarea";
+import { Textarea } from "./textarea.jsx";
 
 function useAutoResizeTextarea({ minHeight, maxHeight }) {
   const textareaRef = useRef(null);

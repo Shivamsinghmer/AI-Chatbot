@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
-import AiInput from "./components/ui/ai-input";
-import ThemeToggleButton from "./components/ui/theme-toggle-button";
+import AiInput from "./components/ui/ai-input.jsx";
+import ThemeToggleButton from "./components/ui/theme-toggle-button.jsx";
 import { io } from "socket.io-client";
-import { LoaderOne } from "./components/ui/loader";
+import { LoaderOne } from "./components/ui/loader.jsx";
 import ReactMarkdown from "react-markdown";
-import Robot from "./components/ui/robot";
+import Robot from "./components/ui/robot.jsx";
 
 function App() {
   const [socket, setSocket] = useState(null);
