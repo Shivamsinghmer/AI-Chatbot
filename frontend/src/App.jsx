@@ -4,7 +4,7 @@ import ThemeToggleButton from "./components/ui/theme-toggle-button.jsx";
 import { io } from "socket.io-client";
 import { LoaderOne } from "./components/ui/loader.jsx";
 import ReactMarkdown from "react-markdown";
-import Robot from "./components/ui/robot.jsx";
+import Robot from "./components/ui/Robot.jsx";
 
 function App() {
   const [socket, setSocket] = useState(null);
