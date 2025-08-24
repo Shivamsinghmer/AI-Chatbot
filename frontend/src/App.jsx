@@ -10,6 +10,7 @@ function App() {
   const [socket, setSocket] = useState(null);
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState("");
+  const [isRobotLoading, setIsRobotLoading] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
 
@@ -19,7 +20,13 @@ function App() {
   }, [messages]);
 
   useEffect(() => {
-    const socketInstance = io(import.meta.env.VITE_BACKEND_URL,{
+    setTimeout(() => {
+      setIsRobotLoading(false);
+    }, 5000); 
+  }, []);
+
+  useEffect(() => {
+    const socketInstance = io(import.meta.env.VITE_BACKEND_URL, {
       withCredentials: true,
       transports: ["websocket", "polling"],
     });
@@ -73,36 +80,41 @@ function App() {
             <h2 className="text-2xl font-bold">MyChat</h2>
             <ThemeToggleButton variant="circle" start="center" />
           </div>
-          <div className="flex-1 h-[90%] w-full flex items-center justify-center flex-col">
-            <div className="h-[80%] w-full flex items-center justify-center">
-              <Robot />
+          <div className="flex-1 pt-10 h-full flex items-center justify-center flex-col">
+            <div className="h-[90%] w-3/4 flex items-center justify-center">
+              {isRobotLoading ? (
+                <LoaderOne />
+              ) : (
+                <Robot />
+              )}
             </div>
             <p className="text-3xl font-bold text-center mt-2">
               Hello..👋, I am Auri
             </p>
-            <p className="text-xl font-bold text-center mt-2">
-              Your ChatBot
-            </p>
+            <p className="text-xl font-bold text-center mt-2">Your ChatBot</p>
           </div>
         </div>
 
         {/* Main Chat Area */}
         <div className="flex-1 flex flex-col">
           {/* Mobile Robot View */}
-          <div className="md:hidden w-full h-[18vh] flex items-center justify-between px-6 border-b border-border bg-muted/30 backdrop-blur-sm">
-            <div className="h-full">
-              <Robot />
+          <div className="md:hidden w-full h-[15vh] flex items-center justify-between p-2 border-b border-border bg-muted/30 backdrop-blur-sm">
+            <div className=" w-[60%] px-10 flex items-center">
+              {isRobotLoading ? (
+                <LoaderOne className="scale-50" />
+              ) : (
+                <Robot className="scale-75" />
+              )}
             </div>
-            <div className="flex flex-col ml-4 relative">
+            <div className="flex flex-col w-[40%] ml-1 sm:ml-2 relative flex-1">
               <ThemeToggleButton
                 variant="circle"
-                className="absolute top-1 right-1"
+                className="absolute top-0 right-0 scale-75"
               />
-              <p className="text-lg font-semibold">Hello..👋, I am Auri</p>
-              <p className="text-sm text-muted-foreground">Your ChatBot</p>
+              <p className="text-sm sm:text-base font-semibold pr-8">Hello..👋, I am Auri</p>
+              <p className="text-[10px] sm:text-xs text-muted-foreground">Your ChatBot</p>
             </div>
           </div>
-
           {/* Messages */}
           <div className="flex-1 overflow-y-auto p-4 md:p-20 space-y-4">
             {messages.length > 0 ? (
@@ -162,7 +174,7 @@ function App() {
           </div>
         </div>
       </div>
-      
+
       {/* Footer */}
       <footer className="text-center py-2 text-sm text-muted-foreground border-t border-border">
         Made by{" "}
