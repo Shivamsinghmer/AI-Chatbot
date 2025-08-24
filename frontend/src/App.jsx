@@ -19,7 +19,10 @@ function App() {
   }, [messages]);
 
   useEffect(() => {
-    let socketInstance = io("http://localhost:3000/");
+    const socketInstance = io(import.meta.env.VITE_BACKEND_URL,{
+      withCredentials: true,
+      transports: ["websocket", "polling"],
+    });
     setSocket(socketInstance);
 
     socketInstance.on("ai-message-response", (data) => {
@@ -31,6 +34,10 @@ function App() {
       setIsLoading(false);
       setInputMessage("");
     });
+
+    return () => {
+      socketInstance.disconnect();
+    };
   }, []);
 
   // Handle sending message
@@ -52,15 +59,15 @@ function App() {
   };
 
   return (
-    <div>
-      <div className="flex h-[95vh] bg-background relative">
+    <div className="flex flex-col min-h-screen">
+      <div className="flex flex-1 bg-background relative">
         {/* Sidebar */}
         <div
           className={`
-        fixed md:static w-[70%] md:w-[41%] h-full border-r border-border p-4 bg-background
-        transform transition-transform duration-300 ease-in-out z-50
-          md:transform-none hidden md:block
-        `}
+            fixed md:static w-[70%] md:w-[41%] h-full border-r border-border p-4 bg-background
+            transform transition-transform duration-300 ease-in-out z-50
+            md:transform-none hidden md:block
+          `}
         >
           <div className="flex justify-between w-full items-center mb-4">
             <h2 className="text-2xl font-bold">MyChat</h2>
@@ -70,20 +77,19 @@ function App() {
             <div className="h-[80%] w-full flex items-center justify-center">
               <Robot />
             </div>
-            <p className="text-3xl font-bold pr-16 text-center mt-2">
+            <p className="text-3xl font-bold text-center mt-2">
               Hello..👋, I am Auri
             </p>
-            <p className="text-xl font-bold pr-16 text-center mt-2">
+            <p className="text-xl font-bold text-center mt-2">
               Your ChatBot
             </p>
           </div>
         </div>
 
         {/* Main Chat Area */}
-
         <div className="flex-1 flex flex-col">
           {/* Mobile Robot View */}
-          <div className="md:hidden w-full h-[18vh] flex items-center justify-between px-6 border-b border-border bg-muted/30 backdrop-blur-sm ">
+          <div className="md:hidden w-full h-[18vh] flex items-center justify-between px-6 border-b border-border bg-muted/30 backdrop-blur-sm">
             <div className="h-full">
               <Robot />
             </div>
@@ -99,7 +105,7 @@ function App() {
 
           {/* Messages */}
           <div className="flex-1 overflow-y-auto p-4 md:p-20 space-y-4">
-            {messages && messages.length > 0 ? (
+            {messages.length > 0 ? (
               <>
                 {messages.map((message, index) => (
                   <div
@@ -142,11 +148,8 @@ function App() {
           </div>
 
           {/* Input Area */}
-          <div className="flex flex-col">
-            <form
-              onSubmit={(e) => handleSendMessage(e)}
-              className="border-t border-border p-4"
-            >
+          <div className="border-t border-border">
+            <form onSubmit={handleSendMessage} className="p-4">
               <AiInput
                 value={inputMessage}
                 onChange={(e) => setInputMessage(e.target.value)}
@@ -159,17 +162,20 @@ function App() {
           </div>
         </div>
       </div>
+      
       {/* Footer */}
-      <div className="text-center py-2 text-sm text-muted-foreground border-t border-border">
+      <footer className="text-center py-2 text-sm text-muted-foreground border-t border-border">
         Made by{" "}
         <a
-          className="font-bold text-md"
+          className="font-bold text-md hover:underline"
           href="https://shivamsinghmer.netlify.app"
+          target="_blank"
+          rel="noopener noreferrer"
         >
           Shivam
         </a>{" "}
         {"<-  "} Click Here
-      </div>
+      </footer>
     </div>
   );
 }

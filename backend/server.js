@@ -2,12 +2,20 @@ import { createServer } from "http";
 import { Server } from "socket.io";
 import app from "./src/app.js";
 import { generateResponse } from "./src/service/ai.service.js";
+import cors from "cors";
+
+app.use(cors({
+  origin: ["http://localhost:5173", "https://your-frontend-domain.com"],
+  methods: ["GET", "POST"],
+  credentials: true
+}));
 
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: "*", // Configure CORS as needed
+    origin: ["http://localhost:5173", "https://your-frontend-domain.com"],
     methods: ["GET", "POST"],
+    credentials: true
   },
 });
 
